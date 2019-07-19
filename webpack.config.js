@@ -1,5 +1,6 @@
 const path = require('path')
 const webpack = require('webpack')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
     entry: "./src/index.js",
@@ -7,13 +8,29 @@ module.exports = {
         rules: [
             {
                 test: /\.(js|jsx)$/,
-                exclude: /(node_modules|bower_components)/,
+                exclude: /(node_modules)/,
                 loader: "babel-loader",
                 options: { presets: ["@babel/env"] }
             },
             {
                 test: /\.css$/,
                 use: [ "style-loader", "css-loader" ]
+            },
+            {
+                test: /\.(svg|jpg|gif)$/,
+                use: [
+                    {
+                        options: {
+                            name: '[name].[ext]',
+                            outputPath: './dist/'
+                        },
+                        loader: "file-loader"
+                    }
+                ]
+            },
+            { 
+                test: /\.(png|jpg|jpeg)$/, 
+                loader: 'url-loader?limit=10000' 
             }
         ]
     },
@@ -22,7 +39,6 @@ module.exports = {
     },
     output: {
         path: path.resolve(__dirname, "./dist/"),
-        publicPath: "/dist/",
         filename: "bundle.js"
     },
     devServer: {
@@ -31,5 +47,8 @@ module.exports = {
         publicPath: "http://localhost:3000/dist/",
         hotOnly: true
     },
-    plugins: [new webpack.HotModuleReplacementPlugin()]
+    plugins: [
+        new CleanWebpackPlugin(),
+        new webpack.HotModuleReplacementPlugin(),
+    ]
 };

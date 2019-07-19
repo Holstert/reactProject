@@ -4,4 +4,7 @@ import App from './app'
 
 const inputRoot = document.getElementById('root');
 
-render(<App />, inputRoot)
+render(
+    <App />, 
+    inputRoot
+)
